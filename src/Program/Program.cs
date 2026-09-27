@@ -6,6 +6,7 @@
 
 using Ucu.Poo.Fsm;
 using System;
+using Ucu.Poo.StateMachine;
 
 namespace Ucu.Poo.Fsm
 {
@@ -19,8 +20,35 @@ namespace Ucu.Poo.Fsm
         /// </summary>
         public static void Main()
         {
-            // Crea un reproductor de música, una secuencia de entradas y
-            // procesa esas entradas con el reproductor de música.
+            // Input Symbols.
+            Play play = new Play();
+            Stop stop = new Stop();
+            Pause pause = new Pause();
+
+            // States
+            StoppedState stopped = new StoppedState();
+            PlayingState playing = new PlayingState();
+            PausedState paused = new PausedState();
+
+            MusicPlayer player = new MusicPlayer(stopped);
+
+            player.AddState(playing);
+            player.AddState(paused);
+            player.AddState(stopped);
+
+            playing.AddTransition(pause, paused);
+            playing.AddTransition(stop, stopped);
+
+            stopped.AddTransition(play, playing);
+
+            paused.AddTransition(play, playing);
+            paused.AddTransition(stop, stopped);
+
+            bool resultado = player.ProcessInputs(new InputSymbol[] { play, pause, stop} );
+            Console.WriteLine(resultado);
+
+            bool resultado2 = player.ProcessInputs(new InputSymbol[] { play, pause, pause} );
+            Console.WriteLine(resultado2);
         }
     }
 }
