@@ -34,7 +34,6 @@ namespace Ucu.Poo.Fsm
 
             player.AddState(playing);
             player.AddState(paused);
-            player.AddState(stopped);
 
             playing.AddTransition(pause, paused);
             playing.AddTransition(stop, stopped);
