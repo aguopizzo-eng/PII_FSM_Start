@@ -3,15 +3,24 @@
 // Copyright (c) Programación II. Derechos reservados.
 // </copyright>
 // -----------------------------------------------------------------------
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+
 
 namespace Ucu.Poo.StateMachine
 {
   /// <summary>
   /// Esta clase representa una máquina de estado genérica.
   /// </summary>
-  public class StateMachine
+  public abstract class StateMachine
   {
+    /// <summary>
+    /// Representa un diccionario que como Clave guarda el tipo del objeto y como valor guarda la instancia.
+    /// </summary>
+    private Dictionary<Type, State> states = new Dictionary<Type, State>();
+
     /// <summary>
     /// Inicializa una nueva instancia de la clase <see cref="StateMachine"/>.
     /// </summary>
@@ -19,14 +28,12 @@ namespace Ucu.Poo.StateMachine
     public StateMachine(State initialState)
     {
       this.CurrentState = initialState;
-      this.States = new List<State>();
-
     }
 
     /// <summary>
-    /// Representa una colección de estados que conoce la máquina de estado.
+    /// Representa una propiedad de solo lectura que devuelve los valores que contiene el diccionario.
     /// </summary>
-    public List<State> States { get; }
+    public ReadOnlyCollection<State> States { get { return this.states.Values.ToList<State>().AsReadOnly(); } }
 
     /// <summary>
     /// Representa el estado actual de la máquina de estado.
@@ -34,14 +41,14 @@ namespace Ucu.Poo.StateMachine
     public State CurrentState { get; set; }
 
     /// <summary>
-    /// Añade un nuevo estado posible para la máquina de estado.
+    /// Añade un nuevo estado posible para la máquina de estado, preguntando si una instancia del estado que se desea agregar ya existe.
     /// </summary>
     /// <param name="state">El estado a agregar a la máquina de estado.</param>
     public void AddState(State state)
     {
-      if (!States.Contains(state))
+      if (!this.states.ContainsKey(state.GetType()))
       {
-        this.States.Add(state);
+        this.states.Add(state.GetType(), state);
       }
     }
 
@@ -83,6 +90,5 @@ namespace Ucu.Poo.StateMachine
 
       return true;
     }
-
   }
 }

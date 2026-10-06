@@ -9,15 +9,9 @@ namespace Ucu.Poo.StateMachine
     private StoppedState stopped;
     private PausedState paused;
     private PlayingState playing;
-  
     private InputSymbol play;
     private InputSymbol pause;
-
-  
-
-    
-
-    
+      
     [SetUp]
     public void SetUp()
     {
